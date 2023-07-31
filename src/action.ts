@@ -61,11 +61,6 @@ export default async function main() {
   const isPullRequest = isPr(GITHUB_REF);
   const isPrerelease = !isReleaseBranch && !isPullRequest && isPreReleaseBranch;
 
-  // Sanitize identifier according to
-  // https://semver.org/#backusnaur-form-grammar-for-valid-semver-versions
-  const identifier = (
-    appendToPreReleaseTag ? appendToPreReleaseTag : currentBranch
-  ).replace(/[^a-zA-Z0-9-]/g, '-');
 
   const prefixRegex = new RegExp(`^${tagPrefix}`);
 
@@ -76,7 +71,6 @@ export default async function main() {
   const latestTag = getLatestTag(validTags, prefixRegex, tagPrefix);
   const latestPrereleaseTag = getLatestPrereleaseTag(
     validTags,
-    identifier,
     prefixRegex
   );
 
@@ -169,7 +163,7 @@ export default async function main() {
       : bump || defaultBump;
     core.setOutput('release_type', releaseType);
 
-    const incrementedVersion = inc(previousVersion, releaseType, identifier);
+    const incrementedVersion = inc(previousVersion, releaseType);
 
     if (!incrementedVersion) {
       core.setFailed('Could not increment version.');

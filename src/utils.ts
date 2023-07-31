@@ -74,12 +74,11 @@ export function getLatestTag(
 
 export function getLatestPrereleaseTag(
   tags: Tags,
-  identifier: string,
   prefixRegex: RegExp
 ) {
   return tags
     .filter((tag) => prerelease(tag.name.replace(prefixRegex, '')))
-    .find((tag) => tag.name.replace(prefixRegex, '').match(identifier));
+    .find((tag) => tag.name.replace(prefixRegex, ''));
 }
 
 export function mapCustomReleaseRules(customReleaseTypes: string) {
